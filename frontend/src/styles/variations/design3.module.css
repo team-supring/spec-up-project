@@ -1,0 +1,287 @@
+/* Design 3: Vibrant Community */
+/* 활기차고 친근한 커뮤니티 느낌 */
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 25%, #fbbf24 50%, #f59e0b 75%, #d97706 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
+}
+
+/* 헤더 스타일 */
+.header {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 2px solid rgba(251, 191, 36, 0.3);
+  box-shadow: 0 4px 25px rgba(251, 191, 36, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.headerContent {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 검색바 스타일 */
+.searchContainer {
+  flex: 1;
+  max-width: 32rem;
+  margin: 0 2rem;
+}
+
+.searchWrapper {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #f59e0b;
+  height: 1rem;
+  width: 1rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(251, 191, 36, 0.4);
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  color: #1f2937;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(251, 191, 36, 0.1);
+}
+
+.searchInput:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2), 0 4px 15px rgba(251, 191, 36, 0.2);
+  transform: translateY(-1px);
+}
+
+.searchInput::placeholder {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+/* 메뉴 버튼 스타일 */
+.menuContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menuButton {
+  padding: 0.5rem;
+  color: #f59e0b;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  cursor: pointer;
+}
+
+.menuButton:hover {
+  color: #d97706;
+  background: rgba(251, 191, 36, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.menuIcon {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.mobileMenuButton {
+  display: none;
+  padding: 0.5rem;
+  color: #f59e0b;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  cursor: pointer;
+}
+
+.mobileMenuButton:hover {
+  color: #d97706;
+  background: rgba(251, 191, 36, 0.2);
+}
+
+/* 메인 콘텐츠 */
+.main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+/* 푸터 스타일 */
+.footer {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-top: 2px solid rgba(251, 191, 36, 0.3);
+  margin-top: auto;
+  box-shadow: 0 -4px 25px rgba(251, 191, 36, 0.1);
+}
+
+.footerContent {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.companyInfo {
+  grid-column: 1 / -1;
+}
+
+.footerLogo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #d97706 0%, #f59e0b 50%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.companyDescription {
+  color: #4b5563;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  max-width: 32rem;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -0.25rem;
+  left: 0;
+  width: 2rem;
+  height: 2px;
+  background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 1px;
+}
+
+.serviceList,
+.supportList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.serviceLink,
+.supportLink {
+  color: #6b7280;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  padding: 0.25rem 0;
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.serviceLink:hover,
+.supportLink:hover {
+  color: #d97706;
+  background: rgba(251, 191, 36, 0.1);
+  transform: translateX(0.25rem);
+}
+
+.footerBottom {
+  border-top: 1px solid rgba(251, 191, 36, 0.3);
+  margin-top: 2rem;
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.copyright {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* 반응형 디자인 */
+@media (min-width: 768px) {
+  .headerContent {
+    padding: 0 1.5rem;
+  }
+  
+  .footerContent {
+    padding: 2rem 1.5rem;
+  }
+  
+  .footerGrid {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  .companyInfo {
+    grid-column: 1 / 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .headerContent {
+    padding: 0 2rem;
+  }
+  
+  .footerContent {
+    padding: 2rem 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .mobileMenuButton {
+    display: block;
+  }
+  
+  .searchContainer {
+    margin: 0 1rem;
+  }
+}
+
+
