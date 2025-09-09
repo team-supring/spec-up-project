@@ -1,0 +1,254 @@
+:global(input),
+:global(button) {
+    font-family: Pretendard-Regular;
+    color: #727377;
+}
+
+:global(input::placeholder) {
+    color: #bcbcbc;
+}
+
+.signUpWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+    background-color: #f2f3f8;
+    overflow: hidden;
+}
+
+.formContainer {
+    background-color: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    min-width: 300px;
+    max-width: 400px;
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    padding: 40px;
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+}
+
+.backIcon {
+    position: absolute;
+    left: 40px;
+    cursor: pointer;
+}
+
+.signupText {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 20px;
+}
+
+.idForm,
+.passwordForm,
+.name,
+.birth,
+.authInputGroup {
+    background-color: #fafafa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.idInputGroup{
+    display: flex;
+}
+
+
+.birthGender,
+.nameBirth,
+.phoneInputGroup,
+.phoneVerificationGroup {
+    display: flex;
+    align-items: center;
+}
+
+.idInfoText,
+.pwInfoText,
+.nameInfoText,
+.birthInfoText,
+.phoneInfoText,
+.emailInfoText {
+    font-size: 14px;
+    color: #727377;
+    margin-bottom: 10px;
+    font-weight: bold;
+    margin-left: 1px;
+}
+
+.idInput,
+.pwInput,
+.phoneInput,
+.emailInput,
+.birthInput,
+.nameInput,
+.authCheckInput {
+    width: 100%;
+    padding: 1px;
+    border: none;
+    background-color: #fafafa;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.dod {
+    color: #bcbcbc;
+}
+
+.maskedDot {
+    margin-left: 2px;
+    color: #bcbcbc;
+    font-size: 16px;
+}
+.genderGroup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.birthInput {
+    width: 50%;
+    padding: 1px;
+    border: none;
+    background-color: #fafafa;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.genderInput {
+    max-width: 20px;
+    padding: 1px;
+    border: none;
+    margin-left: 20px;
+    background-color: #fafafa;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+
+.idCheckButton {
+    font-size: 13px;
+    padding: 5px;
+    width: 30%;
+    border-radius: 8px;
+    border: none;
+    color: black;
+    cursor: pointer;
+}
+
+.idCheckButton:hover,
+.authButton:hover,
+.authCheckButton:hover {
+    background-color: #727377;
+}
+
+.nextButton,
+.signupButton {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 8px;
+    border: none;
+    background-color: #455ef6;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.previousButton {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 8px;
+    border: none;
+    background-color: #455ef6;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.nextButton:hover,
+.previousButton:hover,
+.signupButton:hover {
+    background-color: #3649c9;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+}
+
+.inputError {
+    border: 1px solid rgb(250, 78, 78);
+    box-shadow: 0 0 5px rgba(250, 78, 78, 0.5);
+    border-radius: 8px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+}
+@media screen and (max-height: 600px) {
+    .nextButton,
+    .signupButton,
+    .previousButton {
+        font-size: 12px;
+        padding: 8px 0;
+        width: 70%;
+    }
+
+    .inputField,
+    .button {
+        font-size: 14px;
+        padding: 6px 10px;
+        border-radius: 6px;
+    }
+
+    .signupText {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .idForm,
+    .passwordForm,
+    .name,
+    .birth,
+    .authInputGroup {
+        padding: 7px;
+    }
+}
+
+.footerWrapper {
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    position: static;
+}
+
+.duplicateCheckButton {
+    padding: 8px 12px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.duplicateCheckButton:hover {
+    background-color: #4338ca;
+}
