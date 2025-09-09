@@ -1,0 +1,179 @@
+
+.inputField {
+    font-family: Pretendard-Regular;
+    color: #727377;
+}
+
+.inputField::placeholder {
+    color: #bcbcbc;
+}
+
+.buttonField {
+    font-family: Pretendard-Regular;
+    color: #727377;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+    background-color: #f2f3f8;
+    overflow: hidden;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    min-width: 300px;
+    max-width: 400px; 
+    height: auto;
+    overflow: hidden;
+    position: relative;
+    padding: 40px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logoForm {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.signUp {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.signUpButton {
+    color: #0082ED;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.loginImg {
+    width: 120px;
+    height: auto;
+}
+
+.idText,
+.passwordText {
+    font-size: 14px;
+    color: #727377;
+    margin-bottom: 10px;
+    font-weight: bold;
+    margin-left: 1px;
+}
+
+.memberId,
+.memberPassword {
+    width: 100%;
+    padding: 1px;
+    border: none;
+    background-color: #fafafa;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+
+.idForm,
+.passwordForm {
+    background-color: #fafafa;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+}
+
+.loginButton {
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 8px;
+    border: none;
+    background-color: #1D6DDC;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.loginButton:hover {
+    background-color: #3649c9;
+}
+
+.inputErrorContainer {
+    border: 1px solid rgb(250, 78, 78);
+    box-shadow: 0 0 5px rgba(250, 78, 78, 0.5);
+    border-radius: 8px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+}
+
+
+.kakaoButton,
+.googleButton,
+.naverButton {
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.kakaoButton img,
+.googleButton img,
+.naverButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+.socialButtons{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    color: #999;
+    font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-top: 1px dashed #ccc;
+    margin: 0 10px;
+}
+
+.footerWrapper {
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  position: static;
+}
