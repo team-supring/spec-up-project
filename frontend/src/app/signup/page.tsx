@@ -11,7 +11,6 @@ import Footer from "../../components/loginFooter";
 import { signup, checkLoginIdExists } from "@/apis/login/auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { class } from './../../../node_modules/zod/src/v4/core/core';
 
 interface SignUpForm {
     memberId: string;
