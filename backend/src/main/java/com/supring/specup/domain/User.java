@@ -56,7 +56,7 @@ public class User {
     @Column(name = "role", length = 20, nullable = false)
     private Role role;
 
-    @Column(name = "region_id", nullable = false)
+    @Column(name = "region_id", nullable = true)
     private Long regionId;
 
     @Column(name = "created_at", nullable = false)

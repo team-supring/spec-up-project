@@ -1,27 +1,25 @@
 package com.supring.specup.domain;
 
-import jakarta.persistence.*;
 import lombok.*;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "refresh_token")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String token;
-
-    @Column(nullable = false)
     private String memberId;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    public void updateToken(String newToken) {
+        this.token = newToken;
+        this.createdAt = LocalDateTime.now();
+    }
 }

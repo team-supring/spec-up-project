@@ -17,6 +17,4 @@ public class SignupRequest {
     private String birth;
     private Integer sex;
 
-    // 추가: 지역 ID
-    private Long regionId;
 }

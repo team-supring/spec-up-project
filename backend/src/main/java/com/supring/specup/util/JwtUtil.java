@@ -7,13 +7,15 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+import java.util.Date;
+import io.jsonwebtoken.Jwts;
 import java.security.Key;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class JwtUtil {
+
     @Value("${jwt.secret}")
     private String secretKeyString;
 
@@ -25,6 +27,16 @@ public class JwtUtil {
 
     private Key secretKey;
 
+    /** 토큰 만료일 반환 */
+    public Date getExpirationDate(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getExpiration();
+    }
+
     @PostConstruct
     public void init() {
         secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());
@@ -32,23 +44,21 @@ public class JwtUtil {
 
     public String generateAccessToken(String memberId, List<String> roles) {
         Date now = new Date();
-        Date expiry = new Date(now.getTime() + accessExpirationMs);
         return Jwts.builder()
                 .setSubject(memberId)
                 .claim("roles", roles)
                 .setIssuedAt(now)
-                .setExpiration(expiry)
+                .setExpiration(new Date(now.getTime() + accessExpirationMs))
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String generateRefreshToken(String memberId) {
         Date now = new Date();
-        Date expiry = new Date(now.getTime() + refreshExpirationMs);
         return Jwts.builder()
                 .setSubject(memberId)
                 .setIssuedAt(now)
-                .setExpiration(expiry)
+                .setExpiration(new Date(now.getTime() + refreshExpirationMs))
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -60,7 +70,7 @@ public class JwtUtil {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (Exception ex) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -82,5 +92,10 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.get("roles", List.class);
+    }
+
+    /** 쿠키 max-age 설정용 밀리초 반환 */
+    public long getRefreshExpiry() {
+        return refreshExpirationMs;
     }
 }

@@ -1,7 +1,6 @@
 package com.supring.specup.service;
 
 import com.supring.specup.dto.FaqDto;
-import com.supring.specup.dto.FaqRequest;
 
 import java.util.List;
 

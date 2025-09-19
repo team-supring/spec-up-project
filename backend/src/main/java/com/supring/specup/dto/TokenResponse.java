@@ -1,11 +1,25 @@
 package com.supring.specup.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@AllArgsConstructor
+@Data
+@Builder
 public class TokenResponse {
-    private String cookie; // refreshToken
+    private String refreshToken;
     private String accessToken;
+    private long refreshExpiry; // 초 단위
+
+    // 편의 메서드
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public long getRefreshExpiry() {
+        return refreshExpiry;
+    }
 }
