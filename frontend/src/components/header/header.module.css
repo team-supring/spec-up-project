@@ -1,0 +1,74 @@
+.loginHeader {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.loginButton,
+.signupButton {
+    background: none;
+    border: none;
+    color: #0055cc;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.divider {
+    margin: 0 3px;
+    color: #0055cc;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #0055cc;
+}
+
+.loginImg {
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+}
+
+.searchInput {
+    flex: 1;
+    margin: 0 1rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid #bbb;
+    border-radius: 20px;
+    font-size: 1rem;
+}
+
+.rankButton {
+    background-color: #ee3d43;
+    border: none;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.nav {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+}
+
+.navItem {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}

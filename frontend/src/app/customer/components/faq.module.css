@@ -1,0 +1,36 @@
+.faqContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faqItem {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.question {
+  width: 100%;
+  background: #f8f9fa;
+  border: none;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.answer {
+  overflow: hidden;
+}
+
+.answerContent {
+  padding: 12px 16px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+}
