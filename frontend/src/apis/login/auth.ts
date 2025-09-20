@@ -10,7 +10,7 @@ export const login = async (memberId: string, memberPassword: string) => {
         });
 
         if (response?.status === 200) {
-            const accessToken = response.headers["authorization"];
+            const accessToken = response.headers["accesstoken"];
 
             if (accessToken) {
                 const tokenWithoutBearer = accessToken.replace("Bearer ", "");

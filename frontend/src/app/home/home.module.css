@@ -1,0 +1,60 @@
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Thin.woff') format('woff');
+    font-weight: 100;
+    font-display: swap;
+}
+
+
+.container {
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 10px;
+    color: #333;
+    font-family: Pretendard, sans-serif;
+}
+
+.productList {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 30px;
+}
+
+.productItem {
+    flex: 1;
+}
+
+.productItem img {
+    width: 231px;
+    height: 231px;
+    object-fit: cover;
+    margin-bottom: 0.5rem;
+}
+
+.productItem p {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+}
+
+.post {
+    border-bottom: 1px solid #eee;
+    padding: 0.5rem 0;
+}
+
+.post h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.post p {
+    margin: 0.3rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.post small {
+    color: #aaa;
+    font-size: 0.75rem;
+}

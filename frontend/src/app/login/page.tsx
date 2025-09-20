@@ -50,7 +50,7 @@ export default function SignIn() {
 
         try {
             await login(memberId, memberPassword);
-            router.push("/main");
+            router.push("/home");
         } catch (err: any) {
             console.error("Login failed:", err);
             if (
