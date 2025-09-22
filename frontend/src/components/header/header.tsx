@@ -27,7 +27,12 @@ export default function Header() {
 
             <header className={styles.header}>
                 <div className={styles.logo}>
-                    <img src={logo.src} className={styles.loginImg} onClick={() => router.push("/home")} alt="logo" />
+                    <img
+                        src={logo.src}
+                        className={styles.loginImg}
+                        onClick={() => router.push("/home")}
+                        alt="logo"
+                    />
                 </div>
                 <input
                     type="search"
@@ -42,7 +47,12 @@ export default function Header() {
 
             <nav className={styles.nav}>
                 <div className={styles.navItem}>내 동네 찾기</div>
-                <div className={styles.navItem}>중고 거래</div>
+                <div
+                    className={styles.navItem}
+                    onClick={() => router.push("/market")}
+                >
+                    중고 거래
+                </div>
                 <div className={styles.navItem}>커뮤니티 게시판</div>
                 <div className={styles.navItem}>채팅방</div>
                 <div

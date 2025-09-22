@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import styles from "./login.module.css";
 import classNames from "classnames";
 import Image from "next/image";
-import { FC, FormEvent, useState } from "react";
+import { useState } from "react";
 import logo from "@/assets/logo.png";
 import { motion, easeInOut } from "framer-motion";
 import GoogleLoginButton from "@/components/googleLogin";
@@ -23,8 +23,8 @@ export default function SignIn() {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
-        trigger,
     } = useForm<LoginForm>({
         shouldFocusError: false,
     });
@@ -32,8 +32,8 @@ export default function SignIn() {
     const [memberId, setMemberId] = useState<string>("");
     const [memberPassword, setMemberPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
-    const router = useRouter();
     const [shakeKey, setShakeKey] = useState(0);
+    const router = useRouter();
 
     const shakeAnimation = {
         x: [0, -5, 5, -5, 5, 0],
@@ -41,25 +41,16 @@ export default function SignIn() {
     };
 
     const handleClick = async () => {
-        const result = await trigger(["memberId", "memberPassword"]);
-        if (!result) setShakeKey((prev) => prev + 1);
+        setShakeKey((prev) => prev + 1);
     };
 
     const onSubmitLogin: SubmitHandler<LoginForm> = async (data) => {
         setError("");
-
         try {
-            await login(memberId, memberPassword);
+            await login(data.memberId, data.memberPassword);
             router.push("/home");
         } catch (err: any) {
-            console.error("Login failed:", err);
-            if (
-                err.message === "로그인 실패: 아이디와 비밀번호를 확인해주세요."
-            ) {
-                alert(err.message);
-            } else {
-                setError(err.message);
-            }
+            setError(err.message);
         }
     };
 
@@ -100,7 +91,19 @@ export default function SignIn() {
                             type="text"
                             {...register("memberId", { required: true })}
                             className={styles.memberId}
-                            onChange={(e) => setMemberId(e.target.value)}
+                            value={memberId}
+                            onChange={(e) => {
+                                setMemberId(e.target.value);
+                                setValue("memberId", e.target.value, {
+                                    shouldValidate: true,
+                                });
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleSubmit(onSubmitLogin)();
+                                }
+                            }}
                         />
                     </motion.div>
 
@@ -118,7 +121,19 @@ export default function SignIn() {
                             type="password"
                             {...register("memberPassword", { required: true })}
                             className={styles.memberPassword}
-                            onChange={(e) => setMemberPassword(e.target.value)}
+                            value={memberPassword}
+                            onChange={(e) => {
+                                setMemberPassword(e.target.value);
+                                setValue("memberPassword", e.target.value, {
+                                    shouldValidate: true,
+                                });
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleSubmit(onSubmitLogin)();
+                                }
+                            }}
                         />
                     </motion.div>
 
@@ -132,6 +147,7 @@ export default function SignIn() {
                         </button>
                     </div>
                 </form>
+
                 <div className={styles.divider}>소셜로 로그인</div>
 
                 <div className={styles.socialButtons}>
@@ -139,13 +155,11 @@ export default function SignIn() {
                         onSuccess={(res) => console.log("카카오 토큰:", res)}
                         className={styles.kakaoButton}
                     />
-
                     <GoogleLoginButton
                         onSuccess={(res) => console.log("토큰 받아옴:", res)}
                         onError={() => alert("구글 로그인 실패")}
                         className={styles.googleButton}
                     />
-
                     <NaverLoginButton className={styles.naverButton} />
                 </div>
             </motion.div>
