@@ -8,6 +8,6 @@ public class LoginRequest {
     @JsonProperty("memberId")
     private String memberId;
 
-    @JsonProperty("password")
+    @JsonProperty("memberPassword")
     private String memberPassword;
 }

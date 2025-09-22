@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.util.Date;
 import java.io.IOException;
@@ -26,11 +27,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
+    private static final AntPathRequestMatcher[] skipMatchers = {
+            new AntPathRequestMatcher("/api/auth/**")
+    };
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
+
+        // 1. 로그인/회원가입 경로 예외 처리
+        for (AntPathRequestMatcher matcher : skipMatchers) {
+            if (matcher.matches(request)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+        }
+
         String header = request.getHeader("Authorization");
 
         System.out.println("▶ URI: " + request.getRequestURI());

@@ -1,6 +1,8 @@
 package com.supring.specup.exception;
 
 import com.supring.specup.dto.ErrorResponse;
+
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -82,6 +86,17 @@ public class GlobalExceptionHandler {
                                 ex.getMessage(),
                                 req.getRequestURI(),
                                 LocalDateTime.now());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
+        @ExceptionHandler(NotFoundException.class)
+        public ResponseEntity<Map<String, Object>> handleNotFound(NotFoundException ex, HttpServletRequest req) {
+                Map<String, Object> error = new HashMap<>();
+                error.put("status", 404);
+                error.put("error", "Not Found");
+                error.put("message", ex.getMessage());
+                error.put("path", req.getRequestURI());
+                error.put("timestamp", LocalDateTime.now().toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
 }

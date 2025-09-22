@@ -1,5 +1,6 @@
 package com.supring.specup.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.supring.specup.dto.CsDto;
 import com.supring.specup.dto.CsRequest;
 import com.supring.specup.dto.FaqDto;
@@ -75,12 +76,14 @@ public class CsController {
     @GetMapping("/inquiry/my")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<List<CsDto>> listMyInquiries(Authentication auth) {
-        return ResponseEntity.ok(csService.listByOwner(auth.getName()));
+        String memberId = auth.getName();
+        return ResponseEntity.ok(csService.listByOwner(memberId));
     }
 
     @Operation(summary = "문의 등록")
     @PostMapping("/inquiry")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @JsonView(CsDto.Detail.class)
     public ResponseEntity<CsDto> createInquiry(
             @RequestBody CsRequest req,
             Authentication auth) {
@@ -96,6 +99,7 @@ public class CsController {
     @Operation(summary = "문의 상세 조회")
     @GetMapping("/inquiry/{csId}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @JsonView(CsDto.Detail.class)
     public ResponseEntity<CsDto> getInquiry(
             @PathVariable Long csId,
             Authentication auth) {

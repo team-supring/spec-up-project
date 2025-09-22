@@ -3,12 +3,17 @@ package com.supring.specup.service;
 
 import com.supring.specup.domain.Faq;
 import com.supring.specup.dto.FaqDto;
+import com.supring.specup.dto.FaqResponse;
 import com.supring.specup.repository.FaqRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -76,5 +81,20 @@ public class FaqServiceImpl implements FaqService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "FAQ 없음");
         }
         faqRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<FaqResponse> getFaqList(Pageable pageable) {
+        Page<Faq> faqPage = faqRepository.findAll(pageable);
+
+        List<FaqResponse> faqResponses = faqPage.getContent().stream()
+                .map(faq -> FaqResponse.builder()
+                        .faqId(faq.getId())
+                        .question(faq.getQuestion())
+                        .answer(faq.getAnswer())
+                        .build())
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(faqResponses, pageable, faqPage.getTotalElements());
     }
 }

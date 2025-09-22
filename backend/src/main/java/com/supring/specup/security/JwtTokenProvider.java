@@ -19,8 +19,9 @@ public class JwtTokenProvider {
     private long accessExpirationMs;
 
     // 토큰 생성
-    public String createToken(String username, Set<com.supring.specup.domain.Role> roles) {
-        Claims claims = Jwts.claims().setSubject(username);
+    public String createToken(String memberId, Set<com.supring.specup.domain.Role> roles) {
+        Claims claims = Jwts.claims().setSubject(memberId);
+        claims.put("memberId", memberId);
         claims.put("roles", roles.stream()
                 .map(Enum::name)
                 .collect(Collectors.toList()));

@@ -67,9 +67,8 @@ public class CsServiceImpl implements CsService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CsDto> listByOwner(String username) {
-        // username으로 User 찾기
-        User owner = userRepository.findByName(username)
+    public List<CsDto> listByOwner(String memberId) {
+        User owner = userRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         return csRepository.findByOwnerMemberIdOrderByCreatedAtDesc(owner.getMemberId())

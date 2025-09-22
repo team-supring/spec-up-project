@@ -1,5 +1,6 @@
 package com.supring.specup.dto;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.supring.specup.domain.Cs;
@@ -13,32 +14,45 @@ import java.util.List;
 @Builder
 public class CsDto {
 
+    public interface Summary {
+    }
+
+    public interface Detail extends Summary {
+    }
+
+    @JsonView(Summary.class)
     private Long id;
+
+    @JsonView(Summary.class)
     private String ownerName;
+
+    @JsonView(Summary.class)
     private String title;
+
+    @JsonView(Summary.class)
     private String content;
-    private List<String> photo;
+
+    @JsonView(Detail.class)
     private String csAnswer;
+
+    @JsonView(Detail.class)
     private String csAnswerYN;
+
+    @JsonView(Detail.class)
     private String answeredBy;
+
+    @JsonView(Summary.class)
     private LocalDateTime createdAt;
+
+    @JsonView(Detail.class)
     private LocalDateTime repliedAt;
 
     public static CsDto of(Cs cs) {
-        List<String> photoList;
-        try {
-            photoList = new ObjectMapper()
-                    .readValue(cs.getPhoto(), new TypeReference<List<String>>() {
-                    });
-        } catch (Exception e) {
-            photoList = List.of();
-        }
         return CsDto.builder()
                 .id(cs.getId())
                 .ownerName(cs.getOwner().getName())
                 .title(cs.getTitle())
                 .content(cs.getContent())
-                .photo(photoList)
                 .csAnswer(cs.getCsAnswer())
                 .csAnswerYN(cs.getCsAnswerYN())
                 .answeredBy(cs.getAnsweredBy())

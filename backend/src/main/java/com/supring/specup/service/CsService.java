@@ -19,7 +19,7 @@ public interface CsService {
     List<CsDto> listAll();
 
     // 내 문의 내역 (로그인)
-    List<CsDto> listByOwner(String username);
+    List<CsDto> listByOwner(String memberId);
 
     // Admin용: 특정 사용자의 문의만 조회
     List<CsDto> listByOwnerForAdmin(String memberId);
