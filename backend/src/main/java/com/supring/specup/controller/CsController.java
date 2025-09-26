@@ -3,85 +3,85 @@ package com.supring.specup.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.supring.specup.dto.CsDto;
 import com.supring.specup.dto.CsRequest;
-import com.supring.specup.dto.FaqDto;
-import com.supring.specup.dto.FaqRequest;
 import com.supring.specup.service.CsService;
-import com.supring.specup.service.FaqService;
+import com.supring.specup.util.JwtUtil;
+import com.supring.specup.domain.User;
+import com.supring.specup.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/support")
+@RequestMapping("/api/support/cs")
 @RequiredArgsConstructor
 public class CsController {
     private static final Logger log = LoggerFactory.getLogger(CsController.class);
-
     private final CsService csService;
-    private final FaqService faqService;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    // --- FAQ Endpoints ---
-
-    @Operation(summary = "FAQ 목록 조회")
-    @GetMapping("/faq")
-    public ResponseEntity<List<FaqDto>> listFaqs() {
-        return ResponseEntity.ok(faqService.findAll());
-    }
-
-    @Operation(summary = "FAQ 상세 조회")
-    @GetMapping("/faq/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<FaqDto> getFaq(@PathVariable Long id) {
-        return ResponseEntity.ok(faqService.findById(id));
-    }
-
-    @Operation(summary = "FAQ 등록")
-    @PostMapping("/faq")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<FaqDto> createFaq(@RequestBody FaqRequest req) {
-        FaqDto created = faqService.create(req.getQuestion(), req.getAnswer());
-        URI location = URI.create("/api/support/faq/" + created.getId());
-        return ResponseEntity.created(location).body(created);
-    }
-
-    @Operation(summary = "FAQ 수정")
-    @PutMapping("/faq/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> updateFaq(
-            @PathVariable Long id,
-            @RequestBody FaqRequest req) {
-        faqService.update(id, req.getQuestion(), req.getAnswer());
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(summary = "FAQ 삭제")
-    @DeleteMapping("/faq/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteFaq(@PathVariable Long id) {
-        faqService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    // --- CS (1:1 문의) Endpoints ---
-
-    @Operation(summary = "내 문의 목록 조회")
-    @GetMapping("/inquiry/my")
+    @Operation(summary = "1:1 문의 목록 조회")
+    @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<List<CsDto>> listMyInquiries(Authentication auth) {
+    @JsonView(CsDto.Summary.class)
+    public ResponseEntity<Page<CsDto>> listInquiries(Pageable pageable,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size,
+            @RequestHeader("Authorization") String authHeader,
+            Authentication auth) {
+
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        String token = authHeader.replace("Bearer ", "");
+        String memberId = jwtUtil.extractMemberId(token);
+
+        PageRequest pr = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<CsDto> result;
+
+        if (isAdmin) {
+            result = csService.listAll(pr);
+        } else {
+            User user = userRepository.findByMemberId(memberId)
+                    .orElseThrow(() -> new UsernameNotFoundException(memberId));
+            result = csService.listByOwner(user.getUserId(), pr);
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
+    @Operation(summary = "1:1 문의 상세 조회")
+    @GetMapping("/{csId}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @JsonView(CsDto.Detail.class)
+    public ResponseEntity<CsDto> getInquiry(
+            @PathVariable Long csId,
+            Authentication auth) {
         String memberId = auth.getName();
-        return ResponseEntity.ok(csService.listByOwner(memberId));
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        CsDto dto = isAdmin
+                ? csService.getById(csId)
+                : csService.getIfOwner(memberId, csId);
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(summary = "문의 등록")
-    @PostMapping("/inquiry")
+    @PostMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @JsonView(CsDto.Detail.class)
     public ResponseEntity<CsDto> createInquiry(
@@ -92,22 +92,12 @@ public class CsController {
         log.debug("▶▶▶ photo = {}", req.getPhoto());
 
         CsDto created = csService.create(auth.getName(), req);
-        URI location = URI.create("/api/support/inquiry/" + created.getId());
+        URI location = URI.create("/api/support/cs/" + created.getId());
         return ResponseEntity.created(location).body(created);
     }
 
-    @Operation(summary = "문의 상세 조회")
-    @GetMapping("/inquiry/{csId}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    @JsonView(CsDto.Detail.class)
-    public ResponseEntity<CsDto> getInquiry(
-            @PathVariable Long csId,
-            Authentication auth) {
-        return ResponseEntity.ok(csService.getIfOwner(auth.getName(), csId));
-    }
-
     @Operation(summary = "문의 수정")
-    @PutMapping("/inquiry/{csId}")
+    @PutMapping("/{csId}")
     @PreAuthorize("@csSecurity.isOwner(authentication.name, #csId) or hasRole('ADMIN')")
     public ResponseEntity<Void> updateInquiry(
             @PathVariable Long csId,
@@ -117,60 +107,44 @@ public class CsController {
     }
 
     @Operation(summary = "문의 삭제")
-    @DeleteMapping("/inquiry/{csId}")
+    @DeleteMapping("/{csId}")
     @PreAuthorize("@csSecurity.isOwner(authentication.name, #csId) or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteInquiry(@PathVariable Long csId) {
         csService.delete(csId);
         return ResponseEntity.noContent().build();
     }
 
-    // --- 관리자 답변 Endpoints ---
-
     @Operation(summary = "답변 등록")
-    @PostMapping("/inquiry/admin/answer")
+    @PostMapping("/{csId}/answer")
     @PreAuthorize("hasRole('ADMIN')")
+    @JsonView(CsDto.Detail.class)
     public ResponseEntity<CsDto> createAnswer(
-            @RequestParam Long csId,
-            @RequestParam String answer,
+            @PathVariable Long csId,
+            @RequestBody String answer,
             Authentication auth) {
         CsDto dto = csService.createAdminAnswer(csId, answer, auth.getName());
-        URI location = URI.create("/api/support/inquiry/" + csId);
-        return ResponseEntity.created(location).body(dto);
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(summary = "답변 수정")
-    @PutMapping("/inquiry/admin/answer/{csId}")
+    @PutMapping("/{csId}/answer")
     @PreAuthorize("hasRole('ADMIN')")
+    @JsonView(CsDto.Detail.class)
     public ResponseEntity<CsDto> updateAnswer(
             @PathVariable Long csId,
-            @RequestParam String answer,
+            @RequestBody String answer,
             Authentication auth) {
-        return ResponseEntity.ok(csService.updateAdminAnswer(csId, answer, auth.getName()));
+        CsDto dto = csService.updateAdminAnswer(csId, answer, auth.getName());
+        return ResponseEntity.ok(dto);
     }
 
     @Operation(summary = "답변 삭제")
-    @DeleteMapping("/inquiry/admin/answer/{csId}")
+    @DeleteMapping("/answer/{csId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteAnswer(
             @PathVariable Long csId,
             Authentication auth) {
         csService.deleteAdminAnswer(csId, auth.getName());
         return ResponseEntity.noContent().build();
-    }
-
-    // --- 관리자 조회 Endpoints ---
-
-    @Operation(summary = "모든 1:1 문의 목록 조회 (관리자 전용)")
-    @GetMapping("/inquiry")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<CsDto>> listAllInquiries() {
-        return ResponseEntity.ok(csService.listAll());
-    }
-
-    @Operation(summary = "특정 사용자 1:1 문의 조회 (관리자 전용)")
-    @GetMapping("/inquiry/user/{memberId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<CsDto>> listUserInquiries(@PathVariable String memberId) {
-        return ResponseEntity.ok(csService.listByOwnerForAdmin(memberId));
     }
 }

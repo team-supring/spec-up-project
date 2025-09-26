@@ -50,7 +50,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 .requestMatchers("/api/faq/**").permitAll()
-                                                .requestMatchers("/db-test").permitAll()
+
                                                 // Swagger
                                                 .requestMatchers(
                                                                 "/swagger-ui.html",
@@ -69,6 +69,7 @@ public class SecurityConfig {
                                                 // 기타
                                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                                 .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                                                .requestMatchers("/api/community/**").hasRole("USER")
                                                 .anyRequest().denyAll())
 
                                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

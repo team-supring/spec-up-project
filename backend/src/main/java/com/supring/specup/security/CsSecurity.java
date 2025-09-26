@@ -1,23 +1,24 @@
 package com.supring.specup.security;
 
-import com.supring.specup.domain.Cs;
+import com.supring.specup.domain.User;
 import com.supring.specup.repository.CsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 @Component
 @RequiredArgsConstructor
 public class CsSecurity {
-
     private final CsRepository csRepository;
 
-    public boolean isOwner(String username, Long csId) {
+    /**
+     * 게시글 소유자인지 검사
+     *
+     * @param userId 로그인한 사용자의 고유 ID
+     * @param csId   확인할 게시글 ID
+     */
+    public boolean isOwner(Long userId, Long csId) {
         return csRepository.findById(csId)
-                .map(cs -> cs.getOwner().getName())
-                .map(ownerUsername -> ownerUsername.equals(username))
-                .orElse(false);
+                .filter(cs -> cs.getOwner().getUserId().equals(userId))
+                .isPresent();
     }
 }

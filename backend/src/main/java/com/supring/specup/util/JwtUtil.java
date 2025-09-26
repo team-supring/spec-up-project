@@ -37,6 +37,28 @@ public class JwtUtil {
         return claims.getExpiration();
     }
 
+    /** 토큰에서 Claims 파싱 */
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    // 1번에서 호출할 메서드
+    public Long getUserIdFromToken(String token) {
+        Claims claims = parseClaims(token);
+        Object idClaim = claims.get("userId");
+        if (idClaim instanceof Integer) {
+            return ((Integer) idClaim).longValue();
+        } else if (idClaim instanceof Long) {
+            return (Long) idClaim;
+        } else {
+            throw new IllegalArgumentException("Invalid userId in token");
+        }
+    }
+
     @PostConstruct
     public void init() {
         secretKey = Keys.hmacShaKeyFor(secretKeyString.getBytes());

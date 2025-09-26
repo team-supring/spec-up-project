@@ -1,9 +1,13 @@
 package com.supring.specup.service;
 
 import com.supring.specup.dto.CsDto;
+import com.supring.specup.dto.CsInquiryDto;
 import com.supring.specup.dto.CsRequest;
+import com.supring.specup.dto.CsResponseDto;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -13,16 +17,7 @@ public interface CsService {
     CsDto get(Long csId);
 
     // 본인 확인용 상세
-    CsDto getIfOwner(String username, Long csId);
-
-    // 전체 문의 (관리자)
-    List<CsDto> listAll();
-
-    // 내 문의 내역 (로그인)
-    List<CsDto> listByOwner(String memberId);
-
-    // Admin용: 특정 사용자의 문의만 조회
-    List<CsDto> listByOwnerForAdmin(String memberId);
+    CsDto getIfOwner(String username, Long csId);;
 
     // 문의 등록
     CsDto create(String username, CsRequest request);
@@ -43,5 +38,11 @@ public interface CsService {
     void deleteAdminAnswer(Long csId, String adminId);
 
     CsDto create(CsRequest req);
+
+    Page<CsDto> listAll(PageRequest pageRequest);
+
+    Page<CsDto> listByOwner(Long ownerId, PageRequest pageRequest);
+
+    CsDto getById(Long csId);
 
 }

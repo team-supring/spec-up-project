@@ -3,17 +3,26 @@ package com.supring.specup.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.supring.specup.domain.Cs;
 import com.supring.specup.dto.CsDto;
+import com.supring.specup.dto.CsInquiryDto;
 import com.supring.specup.dto.CsRequest;
+import com.supring.specup.dto.CsResponseDto;
 import com.supring.specup.repository.CsRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.supring.specup.domain.User;
 import com.supring.specup.repository.UserRepository;
 import com.supring.specup.domain.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,7 +31,7 @@ public class CsServiceImpl implements CsService {
 
     private final CsRepository csRepository;
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -31,15 +40,6 @@ public class CsServiceImpl implements CsService {
         Cs cs = csRepository.findById(csId)
                 .orElseThrow(() -> new RuntimeException("CS 글을 찾을 수 없습니다."));
         return CsDto.of(cs);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<CsDto> listAll() {
-        return csRepository.findAllByOrderByCreatedAtDesc(Pageable.unpaged())
-                .stream()
-                .map(CsDto::of)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -63,18 +63,6 @@ public class CsServiceImpl implements CsService {
         }
 
         return CsDto.of(cs);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<CsDto> listByOwner(String memberId) {
-        User owner = userRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        return csRepository.findByOwnerMemberIdOrderByCreatedAtDesc(owner.getMemberId())
-                .stream()
-                .map(CsDto::of)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -190,12 +178,22 @@ public class CsServiceImpl implements CsService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<CsDto> listByOwnerForAdmin(String memberId) {
-        // memberId 유효성(사용자 존재) 검사(Optional)
-        return csRepository.findByOwnerMemberIdOrderByCreatedAtDesc(memberId)
-                .stream()
-                .map(CsDto::of)
-                .collect(Collectors.toList());
+    public Page<CsDto> listAll(PageRequest pageRequest) {
+        return csRepository.findAll(pageRequest)
+                .map(CsDto::of);
     }
+
+    @Override
+    public Page<CsDto> listByOwner(Long ownerId, PageRequest pageRequest) {
+        return csRepository.findByOwnerUserIdOrderByCreatedAtDesc(ownerId, pageRequest)
+                .map(CsDto::of);
+    }
+
+    @Override
+    public CsDto getById(Long csId) {
+        Cs cs = csRepository.findById(csId)
+                .orElseThrow(() -> new NoSuchElementException("문의 없음"));
+        return CsDto.of(cs);
+    }
+
 }

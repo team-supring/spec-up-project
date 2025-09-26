@@ -67,7 +67,7 @@ class CsControllerTest {
                                 .ownerName("u1") // writer → ownerName
                                 .title("t")
                                 .content("c")
-                                .photo(List.of("url1"))
+
                                 .csAnswer(null)
                                 .csAnswerYN("N")
                                 .answeredBy(null)
