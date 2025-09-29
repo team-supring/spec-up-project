@@ -43,7 +43,7 @@ export default function Header() {
             <nav className={styles.nav}>
                 <div className={styles.navItem}>내 동네 찾기</div>
                 <div className={styles.navItem}>중고 거래</div>
-                <div className={styles.navItem}>커뮤니티 게시판</div>
+                <div className={styles.navItem} onClick={() => router.push("/board")}>커뮤니티 게시판</div>
                 <div className={styles.navItem}>채팅방</div>
                 <div
                     className={styles.navItem}
