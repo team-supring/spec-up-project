@@ -10,6 +10,8 @@ import com.supring.specup.dto.CommunityPostRequest;
 import com.supring.specup.repository.CommentRepository;
 import com.supring.specup.repository.CommunityPostRepository;
 import com.supring.specup.repository.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,4 +83,60 @@ public class CommunityBoardServiceImpl implements CommunityBoardService {
         return commentRepository.findByPostIdWithUser(postId)
                 .stream().map(CommentDto::of).collect(Collectors.toList());
     }
+
+    // 게시글 수정
+    @Transactional
+    @Override
+    public CommunityPostDto updatePost(Long postId, CommunityPostRequest request, String username) {
+        CommunityPost post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다. id=" + postId));
+
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+
+        return CommunityPostDto.detail(post);
+    }
+
+    // 게시글 삭제
+    @Transactional
+    @Override
+    public void deletePost(Long postId) {
+        CommunityPost post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다. id=" + postId));
+
+        postRepository.delete(post);
+    }
+
+    // 댓글 수정
+    @Transactional
+    @Override
+    public CommentDto updateComment(Long postId, Long commentId, CommentRequest request, String username) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다. id=" + commentId));
+
+        // 댓글이 해당 게시글에 속하는지 확인
+        if (!comment.getPost().getPostId().equals(postId)) {
+            throw new IllegalArgumentException("댓글이 해당 게시글에 속하지 않습니다.");
+        }
+
+        comment.setContent(request.getContent());
+
+        return CommentDto.of(comment);
+    }
+
+    // 댓글 삭제
+    @Transactional
+    @Override
+    public void deleteComment(Long postId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다. id=" + commentId));
+
+        // 댓글이 해당 게시글에 속하는지 확인
+        if (!comment.getPost().getPostId().equals(postId)) {
+            throw new IllegalArgumentException("댓글이 해당 게시글에 속하지 않습니다.");
+        }
+
+        commentRepository.delete(comment);
+    }
+
 }

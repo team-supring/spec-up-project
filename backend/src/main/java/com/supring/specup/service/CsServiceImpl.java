@@ -179,12 +179,14 @@ public class CsServiceImpl implements CsService {
 
     @Override
     public Page<CsDto> listAll(PageRequest pageRequest) {
+        System.out.println("pageRequest1 : " + pageRequest);
         return csRepository.findAll(pageRequest)
                 .map(CsDto::of);
     }
 
     @Override
     public Page<CsDto> listByOwner(Long ownerId, PageRequest pageRequest) {
+        System.out.println("pageRequest2 : " + pageRequest);
         return csRepository.findByOwnerUserIdOrderByCreatedAtDesc(ownerId, pageRequest)
                 .map(CsDto::of);
     }

@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
@@ -44,7 +43,8 @@ public class CsController {
             Authentication auth) {
 
         boolean isAdmin = auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                // .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
 
         String token = authHeader.replace("Bearer ", "");
         String memberId = jwtUtil.extractMemberId(token);
@@ -57,7 +57,9 @@ public class CsController {
         } else {
             User user = userRepository.findByMemberId(memberId)
                     .orElseThrow(() -> new UsernameNotFoundException(memberId));
+            // result = csService.listByOwner(user.getUserId(), pr);
             result = csService.listByOwner(user.getUserId(), pr);
+            System.err.println("result : " + result);
         }
 
         return ResponseEntity.ok(result);

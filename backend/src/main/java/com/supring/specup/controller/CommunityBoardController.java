@@ -75,4 +75,52 @@ public class CommunityBoardController {
         List<CommentDto> comments = communityBoardService.getCommentList(postId);
         return ResponseEntity.ok(comments);
     }
+
+    // 게시글 수정
+    @Operation(summary = "게시글 수정", description = "본인 또는 관리자만 게시글을 수정할 수 있습니다.")
+    @PutMapping("/{postId}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isPostOwner(#postId, authentication.name)")
+    public ResponseEntity<CommunityPostDto> updatePost(
+            @PathVariable Long postId,
+            @RequestBody CommunityPostRequest request,
+            Authentication auth) {
+        String memberId = auth.getName();
+        CommunityPostDto dto = communityBoardService.updatePost(postId, request, memberId);
+        return ResponseEntity.ok(dto);
+    }
+
+    // 게시글 삭제
+    @Operation(summary = "게시글 삭제", description = "본인 또는 관리자만 게시글을 삭제할 수 있습니다.")
+    @DeleteMapping("/{postId}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isPostOwner(#postId, authentication.name)")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+        communityBoardService.deletePost(postId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 댓글 수정
+    @Operation(summary = "댓글 수정", description = "본인 또는 관리자만 댓글을 수정할 수 있습니다.")
+    @PutMapping("/{postId}/comments/{commentId}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isCommentOwner(#commentId, authentication.name)")
+    public ResponseEntity<CommentDto> updateComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            @RequestBody CommentRequest request,
+            Authentication auth) {
+        String memberId = auth.getName();
+        CommentDto dto = communityBoardService.updateComment(postId, commentId, request, memberId);
+        return ResponseEntity.ok(dto);
+    }
+
+    // 댓글 삭제
+    @Operation(summary = "댓글 삭제", description = "본인 또는 관리자만 댓글을 삭제할 수 있습니다.")
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isCommentOwner(#commentId, authentication.name)")
+    public ResponseEntity<Void> deleteComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId) {
+        communityBoardService.deleteComment(postId, commentId);
+        return ResponseEntity.ok().build();
+    }
+
 }
