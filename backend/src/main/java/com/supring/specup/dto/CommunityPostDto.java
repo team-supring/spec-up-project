@@ -1,5 +1,6 @@
 package com.supring.specup.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.supring.specup.domain.CommunityPost;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommunityPostDto {
 
     public interface Summary {
@@ -30,7 +32,7 @@ public class CommunityPostDto {
     // 상세 뷰에서 노출할 필드
 
     private String content;
-
+    private Long commentCount;
     private List<CommentDto> comments;
 
     // Summary용 변환 (목록 조회)
@@ -58,4 +60,16 @@ public class CommunityPostDto {
                         .collect(Collectors.toList()) : null)
                 .build();
     }
+
+    public static CommunityPostDto summaryWithCommentCount(CommunityPost post, long commentCount) {
+        return CommunityPostDto.builder()
+                .postId(post.getPostId())
+                .title(post.getTitle())
+                .authorName(post.getUser().getMemberId())
+                .likes(post.getLikes())
+                .createdAt(post.getCreatedAt())
+                .commentCount(commentCount)
+                .build();
+    }
+
 }

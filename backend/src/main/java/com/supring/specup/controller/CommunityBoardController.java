@@ -33,6 +33,7 @@ public class CommunityBoardController {
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
+        // Repository 대신 Service 호출
         Page<CommunityPostDto> posts = communityBoardService.getPostList(pageable);
         return ResponseEntity.ok(posts);
     }
@@ -121,6 +122,16 @@ public class CommunityBoardController {
             @PathVariable Long commentId) {
         communityBoardService.deleteComment(postId, commentId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{postId}/like")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<CommunityPostDto> likePost(
+            @PathVariable Long postId,
+            Authentication auth) {
+        String memberId = auth.getName();
+        CommunityPostDto dto = communityBoardService.likePost(postId, memberId);
+        return ResponseEntity.ok(dto);
     }
 
 }

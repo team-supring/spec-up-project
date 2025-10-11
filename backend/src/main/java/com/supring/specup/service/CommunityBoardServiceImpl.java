@@ -34,7 +34,10 @@ public class CommunityBoardServiceImpl implements CommunityBoardService {
     public Page<CommunityPostDto> getPostList(Pageable pageable) {
         return postRepository
                 .findAllByOrderByCreatedAtDesc(pageable)
-                .map(CommunityPostDto::summary);
+                .map(post -> {
+                    long cnt = commentRepository.countByPost_PostId(post.getPostId());
+                    return CommunityPostDto.summaryWithCommentCount(post, cnt);
+                });
     }
 
     @Override
@@ -139,4 +142,18 @@ public class CommunityBoardServiceImpl implements CommunityBoardService {
         commentRepository.delete(comment);
     }
 
+    // 좋아요 기능 구현
+    @Transactional
+    @Override
+    public CommunityPostDto likePost(Long postId, String username) {
+        CommunityPost post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다. id=" + postId));
+
+        // 단순 증가 버전
+        post.setLikes(post.getLikes() + 1);
+
+        // 댓글 수도 함께 반환
+        long commentCount = commentRepository.countByPost_PostId(postId);
+        return CommunityPostDto.summaryWithCommentCount(post, commentCount);
+    }
 }

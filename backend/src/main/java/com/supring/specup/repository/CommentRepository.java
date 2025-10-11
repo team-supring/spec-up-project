@@ -19,4 +19,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
                 ORDER BY c.createdAt ASC
             """)
     List<Comment> findByPostIdWithUser(@Param("postId") Long postId);
+
+    // 게시글별 댓글 수 반환
+    long countByPost_PostId(Long postId);
 }

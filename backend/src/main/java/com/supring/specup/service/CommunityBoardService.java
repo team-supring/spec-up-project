@@ -37,4 +37,7 @@ public interface CommunityBoardService {
 
     // 특정 게시글의 댓글 목록 조회
     List<CommentDto> getCommentList(Long postId);
+
+    // 좋아요 기능 추가
+    CommunityPostDto likePost(Long postId, String username);
 }
